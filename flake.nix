@@ -339,7 +339,7 @@
           #       https://github.com/NixOS/nixpkgs/issues/320448
           "static-" = nixpkgsFor.${system}.static;
         })
-        (nixpkgsPrefix: nixpkgs: 
+        (nixpkgsPrefix: nixpkgs:
           flatMapAttrs nixpkgs.nix-components
             (pkgName: pkg:
               flatMapAttrs pkg.tests or {}
@@ -413,6 +413,7 @@
             in
               "-D${prefix}:${rest}";
           havePerl = stdenv.buildPlatform == stdenv.hostPlatform && stdenv.hostPlatform.isUnix;
+          ignoreCrossFile = flags: builtins.filter (flag: !(lib.strings.hasInfix "cross-file" flag)) flags;
         in {
           pname = "shell-for-" + attrs.pname;
 
@@ -444,10 +445,10 @@
           };
 
           mesonFlags =
-            map (transformFlag "libutil") pkgs.nix-util.mesonFlags
-            ++ map (transformFlag "libstore") pkgs.nix-store.mesonFlags
-            ++ map (transformFlag "libfetchers") pkgs.nix-fetchers.mesonFlags
-            ++ lib.optionals havePerl (map (transformFlag "perl") pkgs.nix-perl-bindings.mesonFlags)
+            map (transformFlag "libutil") (ignoreCrossFile pkgs.nix-util.mesonFlags)
+            ++ map (transformFlag "libstore") (ignoreCrossFile pkgs.nix-store.mesonFlags)
+            ++ map (transformFlag "libfetchers") (ignoreCrossFile pkgs.nix-fetchers.mesonFlags)
+            ++ lib.optionals havePerl (map (transformFlag "perl") (ignoreCrossFile pkgs.nix-perl-bindings.mesonFlags))
             ;
 
           nativeBuildInputs = attrs.nativeBuildInputs or []
