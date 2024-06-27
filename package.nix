@@ -30,6 +30,7 @@
 , mdbook
 , mdbook-linkcheck
 , mercurial
+, mesonEmulatorHook
 , openssh
 , openssl
 , pkg-config
@@ -214,6 +215,8 @@ in {
     man # for testing `nix-* --help`
   ] ++ lib.optionals (doInstallCheck || enableManual) [
     jq # Also for custom mdBook preprocessor.
+  ] ++ lib.optionals (!stdenv.buildPlatform.canExecute stdenv.hostPlatform) [
+    mesonEmulatorHook
   ] ++ lib.optional stdenv.hostPlatform.isLinux util-linux
   ;
 
