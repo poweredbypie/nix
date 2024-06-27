@@ -9,7 +9,9 @@ project('nix-dev-shell', 'cpp',
 subproject('libutil')
 subproject('libstore')
 subproject('libfetchers')
-subproject('perl')
+if host_machine.system() == 'linux'
+  subproject('perl')
+endif
 subproject('internal-api-docs')
 subproject('external-api-docs')
 
