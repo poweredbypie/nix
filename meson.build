@@ -9,7 +9,7 @@ project('nix-dev-shell', 'cpp',
 subproject('libutil')
 subproject('libstore')
 subproject('libfetchers')
-if host_machine.system() == 'linux'
+if not meson.is_cross_build()
   subproject('perl')
 endif
 subproject('internal-api-docs')
