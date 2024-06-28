@@ -4,6 +4,7 @@
 , fileset
 
 , meson
+, mesonEmulatorHook
 , ninja
 , pkg-config
 
@@ -57,6 +58,8 @@ mkDerivation (finalAttrs: {
     meson
     ninja
     pkg-config
+  ] ++ lib.optionals (!stdenv.buildPlatform.canExecute stdenv.hostPlatform) [
+    mesonEmulatorHook
   ];
 
   buildInputs = [
